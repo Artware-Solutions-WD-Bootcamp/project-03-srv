@@ -1,6 +1,8 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
-const userConnectionsSchema = new Schema(
+//DO define Schema
+const userConnectionSchema = new Schema(
   {
     ownerID: {
       type: Schema.Types.ObjectId,
@@ -21,6 +23,8 @@ const userConnectionsSchema = new Schema(
   }
 );
 
-const UserConnectionsModel = model("UserConnection", userConnectionsSchema);
+//DO define Model
+const UserConnectionModel = model("UserConnection", userConnectionSchema);
 
-module.exports = UserConnectionsModel;
+//DO export module
+module.exports = UserConnectionModel;

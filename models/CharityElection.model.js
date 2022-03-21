@@ -1,6 +1,8 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
-const charityElectionsSchema = new Schema(
+//DO define Schema
+const charityElectionSchema = new Schema(
   {
     ownerID: {
       type: Schema.Types.ObjectId,
@@ -25,6 +27,8 @@ const charityElectionsSchema = new Schema(
   }
 );
 
-const CharityElectionsModel = model("CharityElection", charityElectionsSchema);
+//DO define Model
+const CharityElectionModel = model("CharityElection", charityElectionSchema);
 
-module.exports = CharityElectionsModel;
+//DO export module
+module.exports = CharityElectionModel;

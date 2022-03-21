@@ -1,5 +1,7 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
+//DO define Schema
 const userSchema = new Schema(
   {
     username: {
@@ -31,6 +33,8 @@ const userSchema = new Schema(
   }
 );
 
+//DO define Model
 const UserModel = model("User", userSchema);
 
+//DO export module
 module.exports = UserModel;

@@ -1,24 +1,30 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
-const charityMovementsSchema = new Schema(
+//DO define Schema
+const orderSchema = Schema(
   {
     ownerID: {
       type: Schema.Types.ObjectId,
       ref: "User",
     },
-    charityID: {
+    collabID: {
       type: Schema.Types.ObjectId,
-      ref: "CharityCauses",
+      ref: "Collab",
     },
     date: {
       type: Date,
+      required: true,
+    },
+    orderRef: {
+      type: String,
       required: true,
     },
     amount: {
       type: Number,
       required: true,
     },
-    charityStatus: {
+    orderStatus: {
       type: String,
       enum: ["new", "processing", "approved"],
       default: "new",
@@ -30,6 +36,8 @@ const charityMovementsSchema = new Schema(
   }
 );
 
-const CharityMovementsModel = model("CharityMovement", charityMovementsSchema);
+//DO define Model
+const OrderModel = model("Order", orderSchema);
 
-module.exports = CharityMovementsModel;
+//DO export module
+module.exports = OrderModel;

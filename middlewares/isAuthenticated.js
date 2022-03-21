@@ -1,5 +1,7 @@
+//DO import needed mocules
 const jwt = require("express-jwt")
 
+// function to check if user is authenticated with a valid Token and generate the payload
 const isAuthenticated = jwt({
   secret: process.env.TOKEN_SECRET,
   algorithms: ["HS256"],
@@ -16,4 +18,5 @@ const isAuthenticated = jwt({
   }
 })
 
+//DO export module
 module.exports = isAuthenticated

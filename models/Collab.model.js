@@ -1,5 +1,7 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
+//DO define Schema
 const collabSchema = new Schema(
   {
     name: {
@@ -32,6 +34,8 @@ const collabSchema = new Schema(
   }
 );
 
+//DO define Model
 const CollabModel = model("Collab", collabSchema);
 
+//DO export module
 module.exports = CollabModel;

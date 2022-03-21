@@ -1,6 +1,8 @@
+//DO import needed modules
 const { Schema, model } = require("mongoose");
 
-const charityCausesSchema = new Schema(
+//DO define Schema
+const charityCauseSchema = new Schema(
   {
     name: {
       type: String,
@@ -37,6 +39,8 @@ const charityCausesSchema = new Schema(
   }
 );
 
-const CharityCausesModel = model("CharityCause", charityCausesSchema);
+//DO define Model
+const CharityCauseModel = model("CharityCause", charityCauseSchema);
 
-module.exports = CharityCausesModel;
+//DO export module
+module.exports = CharityCauseModel;
