@@ -20,6 +20,24 @@ router.get("/", async (req, res, next) => {
 });
 
 //* ============================================================================
+//*   GET USER DETAILS SECTION
+//* ============================================================================
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const response = await UserModel.findById(id);
+    const {username, email, level, avatar} = response
+    const returnUserData = { username, email, level, avatar }
+
+    console.log("USER DETAILS SECTION response: ", returnUserData);
+
+    res.json(returnUserData);
+  } catch (err) {
+    next(err);
+  }
+});
+
+//* ============================================================================
 //*   ADD NEW USER SECTION
 //* ============================================================================
 router.post("/", async (req, res, next) => {
@@ -81,7 +99,7 @@ router.post("/", async (req, res, next) => {
     }
 
     //DO if all validations were passed create user
-    // console.log("Update info: ", username, email, hashedPassword, level, avatar);
+    // console.log("Create user info: ", username, email, hashedPassword, level, avatar);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -100,59 +118,60 @@ router.post("/", async (req, res, next) => {
 });
 
 //* ============================================================================
-//*   USER DETAILS SECTION
-//* ============================================================================
-router.get("/:id", async (req, res, next) => {
-  try {
-    const { id } = req.params;
-    const response = await UserModel.findById(id);
-
-    const returnUserData = ({ username, email, level, avatar } = response);
-    // console.log("USER DETAILS SECTION response: ", returnUserData);
-
-    res.json(returnUserData);
-  } catch (err) {
-    next(err);
-  }
-});
-
-//* ============================================================================
 //*   UPDATE USER SECTION
 //* ============================================================================
 router.patch("/:id", async (req, res, next) => {
   const { id } = req.params;
   const { username, email, password, level, avatar } = req.body;
 
+  // console.log("UPDATE USER SECTION info: ", username, email, password, level, avatar);
+
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
   //! ==========================================================================
   // //? verify if user filled all mandatory information
-  // if (!username || !email || !password || !level) {
-  //   res.status(400).json({
-  //     errorMessage: "All fields are mandatory! Please fill them all!",
-  //   });
-  //   return;
-  // }
+  if (!username || !email || !level) {
+    res.status(400).json({
+      errorMessage: "All fields are mandatory! Please fill them all!",
+    });
+    return;
+  }
 
   try {
+    //? verify if username has already been registered
+    const foundUser = await UserModel.findOne({ username });
+    if (foundUser) {
+      res.status(400).json({
+        errorMessage:
+          "This username is already in use. Please try with another one!",
+      });
+      return;
+    }
 
-  //DO if all validations were passed create user
-  // console.log("UPDATE USER SECTION info: ", username, email, hashedPassword, level, avatar);
+    // //? verify if email has correct syntax
+    const emailRegex =
+      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    if (!emailRegex.test(email)) {
+      res.status(400).json({
+        errorMessage: "E-mail address is not correct! Please verify it...",
+      });
+      return;
+    }
+
+    
+    //? verify if email has already been registered
+    const foundEmail = await UserModel.findOne({ email });
+    if (foundEmail) {
+      res.status(400).json({
+        errorMessage: `The ${email} mail address is already in use! Please use another one...`,
+      });
+      return;
+    }
+
+  //DO if all validations were passed create user  
   const salt = await bcrypt.genSalt(10);
   const hashedPassword = await bcrypt.hash(password, salt);
-
-
   
-    // //? verify if email has correct syntax
-    // const emailRegex =
-    //   /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-    // if (!emailRegex.test(email)) {
-    //   res.status(400).json({
-    //     errorMessage: "E-mail address is not correct! Please verify it...",
-    //   });
-    //   return;
-    // }
-
     await UserModel.findByIdAndUpdate(id, {
       username,
       email,

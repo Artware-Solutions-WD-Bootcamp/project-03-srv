@@ -6,11 +6,11 @@ const charityCauseSchema = new Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     description: {
       type: String,
-      required: true
+      required: true,
     },
     url: {
       type: String,
@@ -28,9 +28,11 @@ const charityCauseSchema = new Schema(
     },
     assignedAmount: {
       type: Number,
+      default: 0,
     },
     deliveryProof: {
       type: String,
+      default: "",
     },
   },
   {
