@@ -9,11 +9,9 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 //*   GET ALL USERS SECTION
 //* ============================================================================
 router.get("/", async (req, res, next) => {
-  // console.log("user.routes req.payload", req.payload);
 
   try {
     const response = await UserModel.find().select("username email avatar");
-    // console.log("user.routes.js base response: ", response)
     res.json(response);
   } catch (err) {
     next(err);
@@ -29,9 +27,6 @@ router.get("/:id", async (req, res, next) => {
     const response = await UserModel.findById(id);
     const { username, email, level, avatar } = response;
     const returnUserData = { username, email, level, avatar };
-
-    console.log("USER DETAILS SECTION response: ", returnUserData);
-
     res.json(returnUserData);
   } catch (err) {
     next(err);
@@ -43,7 +38,6 @@ router.get("/:id", async (req, res, next) => {
 //* ============================================================================
 router.post("/", async (req, res, next) => {
   const { username, email, password, level, avatar } = req.body;
-  // console.log("ADD NEW USER SECTION info:", username, email, password, level, avatar );
 
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -96,7 +90,6 @@ router.post("/", async (req, res, next) => {
     }
 
     //DO if all validations were passed create user
-    // console.log("Create user info: ", username, email, hashedPassword, level, avatar);
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
@@ -118,12 +111,9 @@ router.post("/", async (req, res, next) => {
 //*   UPDATE USER SECTION
 //* ============================================================================
 router.patch("/:id", isAuthenticated, async (req, res, next) => {
-  console.log(req.payload);
   const loggedUserLevel = req.payload.level;
   const { id } = req.params;
   const { username, email, password, level, avatar } = req.body;
-
-  // console.log("UPDATE USER SECTION info: ", username, email, password, level, avatar);
 
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -131,15 +121,16 @@ router.patch("/:id", isAuthenticated, async (req, res, next) => {
   // //? verify if user filled all mandatory information
   if (!username || !email || !level) {
     res.status(400).json({
-      errorMessage: "All fields are mandatory! Please fill them all!",
+      errorMessage: "Username, email and level are mandatory! Please fill them all!",
     });
     return;
   }
 
   try {
+/*
     //? verify if username has already been registered
     const foundUser = await UserModel.findOne({ username });
-    if (foundUser && foundUser._id !== req.payload.id) {
+    if (foundUser && foundUser._id !== req.payload._id) {
       res.status(400).json({
         errorMessage: "This username is already in use. Please try with another one!",
       });
@@ -163,7 +154,7 @@ router.patch("/:id", isAuthenticated, async (req, res, next) => {
       });
       return;
     }
-
+*/
     //DO if all validations were passed create user
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
