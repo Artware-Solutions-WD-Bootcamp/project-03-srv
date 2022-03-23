@@ -3,6 +3,7 @@ const router = require("express").Router();
 const UserModel = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //* ============================================================================
 //*   GET ALL USERS SECTION
@@ -26,8 +27,8 @@ router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await UserModel.findById(id);
-    const {username, email, level, avatar} = response
-    const returnUserData = { username, email, level, avatar }
+    const { username, email, level, avatar } = response;
+    const returnUserData = { username, email, level, avatar };
 
     console.log("USER DETAILS SECTION response: ", returnUserData);
 
@@ -60,15 +61,13 @@ router.post("/", async (req, res, next) => {
     const foundUser = await UserModel.findOne({ username });
     if (foundUser) {
       res.status(400).json({
-        errorMessage:
-          "This username is already in use. Please try with another one!",
+        errorMessage: "This username is already in use. Please try with another one!",
       });
       return;
     }
 
     //? verify if email has correct syntax
-    const emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       res.status(400).json({
         errorMessage: "E-mail address is not correct! Please verify it...",
@@ -86,14 +85,12 @@ router.post("/", async (req, res, next) => {
     }
 
     //? verify if the password is in accordance with requirements
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
 
     if (!passwordRegex.test(password)) {
       // console.log(passwordRegex.test(password));
       res.status(400).json({
-        errorMessage:
-          "The password don't meet the minimum security requirements! It MUST have at least one of: uppercase and lowercase letters, munbers and special characters...",
+        errorMessage: "The password don't meet the minimum security requirements! It MUST have at least one of: uppercase and lowercase letters, munbers and special characters...",
       });
       return;
     }
@@ -120,7 +117,9 @@ router.post("/", async (req, res, next) => {
 //* ============================================================================
 //*   UPDATE USER SECTION
 //* ============================================================================
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id", isAuthenticated, async (req, res, next) => {
+  console.log(req.payload);
+  const loggedUserLevel = req.payload.level;
   const { id } = req.params;
   const { username, email, password, level, avatar } = req.body;
 
@@ -140,17 +139,15 @@ router.patch("/:id", async (req, res, next) => {
   try {
     //? verify if username has already been registered
     const foundUser = await UserModel.findOne({ username });
-    if (foundUser) {
+    if (foundUser && foundUser._id !== req.payload.id) {
       res.status(400).json({
-        errorMessage:
-          "This username is already in use. Please try with another one!",
+        errorMessage: "This username is already in use. Please try with another one!",
       });
       return;
     }
 
     // //? verify if email has correct syntax
-    const emailRegex =
-      /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
       res.status(400).json({
         errorMessage: "E-mail address is not correct! Please verify it...",
@@ -158,7 +155,6 @@ router.patch("/:id", async (req, res, next) => {
       return;
     }
 
-    
     //? verify if email has already been registered
     const foundEmail = await UserModel.findOne({ email });
     if (foundEmail) {
@@ -168,10 +164,10 @@ router.patch("/:id", async (req, res, next) => {
       return;
     }
 
-  //DO if all validations were passed create user  
-  const salt = await bcrypt.genSalt(10);
-  const hashedPassword = await bcrypt.hash(password, salt);
-  
+    //DO if all validations were passed create user
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
+
     await UserModel.findByIdAndUpdate(id, {
       username,
       email,
