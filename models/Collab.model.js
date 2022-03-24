@@ -13,10 +13,10 @@ const collabSchema = new Schema(
       type: String,
       required: true,
     },
-    url: {
-      type: String,
-      unique: true,
-    },
+    // url: {
+    //   type: String,
+    //   unique: true,
+    // },
     registerUrl: {
       type: String,
     },
@@ -25,7 +25,7 @@ const collabSchema = new Schema(
     },
     visibility: {
       type: Boolean,
-      default: false,
+      default: true,
     },
   },
   {

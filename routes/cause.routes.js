@@ -23,9 +23,6 @@ router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
     const response = await CharityCauseModel.findById(id);
-
-    console.log("CHARITY CAUSE DETAILS SECTION response: ", response);
-
     res.json(response);
   } catch (err) {
     next(err);
