@@ -44,7 +44,7 @@ router.post("/", async (req, res, next) => {
   //? verify if user filled all mandatory information
   if (!name || !description) {
     res.status(400).json({
-      errorMessage: "Add collaborator failed! Name and description are mandatory fields. Please fill them!",
+      errorMessage: "Add collaborator failed! Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }

@@ -21,7 +21,7 @@ router.post("/register", async (req, res, next) => {
   //? verify if user filled all mandatory information
   if (!username || !email || !password) {
     res.status(400).json({
-      errorMessage: "All fields are mandatory! Please fill them all!",
+      errorMessage: "Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }
@@ -97,7 +97,7 @@ router.post("/login", async (req, res, next) => {
   //! Backend validators
   if (!username || !password) {
     res.status(400).json({
-      errorMessage: "All fields are mandatory! Please fill them all!",
+      errorMessage: "Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }

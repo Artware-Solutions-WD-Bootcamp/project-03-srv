@@ -42,14 +42,15 @@ router.post("/", async (req, res, next) => {
   //? verify if user filled all mandatory information
   if (!name || !description) {
     res.status(400).json({
-      errorMessage: "Add cause failed! Name and description are mandatory fields. Please fill them!",
+      errorMessage: "Add cause failed! Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }
 
+  //DO if all validations were passed create the charity cause
+  // console.log("Charity cause create info: ", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
+
   try {
-    //DO if all validations were passed create the charity cause
-    // console.log("Charity cause create info: ", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
 
     await CharityCauseModel.create({
       name,
@@ -72,9 +73,25 @@ router.post("/", async (req, res, next) => {
 //*   UPDATE CHARITY CAUSE SECTION
 //* ============================================================================
 router.patch("/:id", async (req, res, next) => {
-  const { id } = req.params;
-  const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
-  console.log(req.body);
+  
+    const { id } = req.params;
+    const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
+    console.log(req.body);
+  
+  //! ==========================================================================
+  //!   BACKEND VALIDATIONS
+  //! ==========================================================================
+  //? verify if user filled all mandatory information
+  if (!name || !description) {
+    res.status(400).json({
+      errorMessage: "Update cause failed! Fields marked with * are mandatory! Please fill them all...",
+    });  
+    return;
+  }  
+  
+  //DO if all validations were passed create the charity cause
+  // console.log("Charity cause create info: ", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
+
   try {
     await CharityCauseModel.findByIdAndUpdate(id, { name, description, url, logo, active, visible, assignedAmount, deliveryProof });
     res.json("Cause updated");

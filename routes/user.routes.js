@@ -45,7 +45,7 @@ router.post("/", async (req, res, next) => {
   //? verify if user filled all mandatory information
   if (!username || !email || !password || !level) {
     res.status(400).json({
-      errorMessage: "All fields are mandatory! Please fill them all!",
+      errorMessage: "Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }
@@ -121,7 +121,7 @@ router.patch("/:id", isAuthenticated, async (req, res, next) => {
   // //? verify if user filled all mandatory information
   if (!username || !email || !level) {
     res.status(400).json({
-      errorMessage: "Username, email and level are mandatory! Please fill them all!",
+      errorMessage: "Fields marked with * are mandatory! Please fill them all...",
     });
     return;
   }
