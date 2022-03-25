@@ -36,7 +36,6 @@ router.get("/:id", async (req, res, next) => {
 //* ============================================================================
 router.post("/", async (req, res, next) => {
   const { name, description, registerUrl, logo } = req.body;
-  console.log("ADD NEW COLLABORATOR SECTION info:", name, description, registerUrl, logo );
 
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -65,7 +64,6 @@ router.post("/", async (req, res, next) => {
 router.patch("/:id", async (req, res, next) => {
   const { id } = req.params;
   const { name, description, registerUrl, logo, visibility } = req.body;
-  console.log(req.body);
   try {
     await CollabModel.findByIdAndUpdate(id, { name, description, registerUrl, logo, visibility });
     res.json("Collaborator updated");

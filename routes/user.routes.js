@@ -82,7 +82,6 @@ router.post("/", async (req, res, next) => {
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
 
     if (!passwordRegex.test(password)) {
-      // console.log(passwordRegex.test(password));
       res.status(400).json({
         errorMessage: "The password don't meet the minimum security requirements! It MUST have at least one of: uppercase and lowercase letters, munbers and special characters...",
       });

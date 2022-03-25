@@ -12,7 +12,6 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 //* ============================================================================
 router.post("/register", async (req, res, next) => {
   const { username, email, password } = req.body;
-  // console.log("auth.routes /register data:", username, email, password);
 
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -41,7 +40,6 @@ router.post("/register", async (req, res, next) => {
     const emailRegex =
       /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     if (!emailRegex.test(email)) {
-      // console.log(emailRegex.test(email));
       res.render("auth/signup.hbs", {
         errorMessage: "E-mail address is not correct! Please verify it...",
       });
@@ -62,7 +60,6 @@ router.post("/register", async (req, res, next) => {
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,15}/;
 
     if (!passwordRegex.test(password)) {
-      // console.log(passwordRegex.test(password));
       res.status(400).json({
         errorMessage:
           "The password don't meet the minimum security requirements! It MUST have at least one of: uppercase and lowercase letters, munbers and special characters...",

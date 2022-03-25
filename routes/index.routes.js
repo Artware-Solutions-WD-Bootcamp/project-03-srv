@@ -17,6 +17,14 @@ router.use("/auth", authRoutes)
 const charityCauseRoutes = require("./cause.routes")
 router.use("/causes", charityCauseRoutes)
 
+//* charity elections route
+const charityElectionRoutes = require("./charityElection.routes")
+router.use("/charity-election", isAuthenticated, charityElectionRoutes)
+
+//* charity movements route
+const charityMovementRoutes = require("./charityMovement.routes")
+router.use("/charity-movement", isAuthenticated, charityMovementRoutes)
+
 //* collaborators causes route
 const collabRoutes = require("./collab.routes")
 router.use("/collabs", collabRoutes)

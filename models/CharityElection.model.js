@@ -7,10 +7,12 @@ const charityElectionSchema = new Schema(
     ownerID: {
       type: Schema.Types.ObjectId,
       ref: "User",
+      required: true,
     },
     charityID: {
       type: Schema.Types.ObjectId,
-      ref: "CharityCauses",
+      ref: "CharityCause",
+      required: true,
     },
     date: {
       type: Date,
@@ -19,6 +21,8 @@ const charityElectionSchema = new Schema(
     points: {
       type: Number,
       required: true,
+      maximum: 10,
+      description: "must be an integer in [ 1, 10 ] and is required"
     },
   },
   {

@@ -9,7 +9,6 @@ const jwt = require("jsonwebtoken");
 router.get("/", async (req, res, next) => {
   try {
     const response = await CharityCauseModel.find().select("name description url logo active visible assignedAmount deliveryProof");
-    // console.log("cause.routes.js base response: ", response)
     res.json(response);
   } catch (err) {
     next(err);
@@ -34,7 +33,6 @@ router.get("/:id", async (req, res, next) => {
 //* ============================================================================
 router.post("/", async (req, res, next) => {
   const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
-  // console.log("ADD NEW CHARITY CAUSE SECTION info:", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
 
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -48,8 +46,6 @@ router.post("/", async (req, res, next) => {
   }
 
   //DO if all validations were passed create the charity cause
-  // console.log("Charity cause create info: ", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
-
   try {
 
     await CharityCauseModel.create({
@@ -76,7 +72,6 @@ router.patch("/:id", async (req, res, next) => {
   
     const { id } = req.params;
     const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
-    console.log(req.body);
   
   //! ==========================================================================
   //!   BACKEND VALIDATIONS
@@ -90,8 +85,6 @@ router.patch("/:id", async (req, res, next) => {
   }  
   
   //DO if all validations were passed create the charity cause
-  // console.log("Charity cause create info: ", name, description, url, logo, active, visible, assignedAmount, deliveryProof);
-
   try {
     await CharityCauseModel.findByIdAndUpdate(id, { name, description, url, logo, active, visible, assignedAmount, deliveryProof });
     res.json("Cause updated");

@@ -10,7 +10,7 @@ const charityMovementSchema = new Schema(
     },
     charityID: {
       type: Schema.Types.ObjectId,
-      ref: "CharityCauses",
+      ref: "CharityCause",
     },
     date: {
       type: Date,
