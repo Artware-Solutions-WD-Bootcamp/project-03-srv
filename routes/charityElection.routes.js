@@ -1,6 +1,7 @@
 //DO require needed modules
 const router = require("express").Router();
 const CharityElectionModel = require("../models/CharityElection.model");
+const CharityCauseModel = require("../models/CharityCause.model");
 const jwt = require("jsonwebtoken");
 
 //* ============================================================================
@@ -14,6 +15,23 @@ router.get("/", async (req, res, next) => {
     next(err);
   }
 });
+
+
+//* ============================================================================
+//*   GET CHARITY ELECTIONS DETAILS SECTION
+//* ============================================================================
+router.get("/:id", async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const response = await CharityElectionModel.findById(id);
+    const { ownerID, charityID, date, points } = response;
+    const returnCharityElectionData = { ownerID, charityID, date, points };
+    res.json(returnCharityElectionData);
+  } catch (err) {
+    next(err);
+  }
+});
+
 
 //* ============================================================================
 //*   ADD NEW CHARITY ELECTION SECTION
@@ -69,7 +87,7 @@ router.patch("/:id", async (req, res, next) => {
 
 //DO if all validations were passed create the charity cause
 try {
-  await CharityCauseModel.findByIdAndUpdate(id, { ownerID, charityID, date, points });
+  await CharityElectionModel.findByIdAndUpdate(id, { ownerID, charityID, date, points });
   res.json("Charity election updated");
 } catch (err) {
   next(err);
@@ -83,7 +101,7 @@ router.delete("/:id", async (req, res, next) => {
 const { id } = req.params;
 
 try {
-  await CharityCauseModel.findByIdAndDelete(id);
+  await CharityElectionModel.findByIdAndDelete(id);
   res.json("Charity election deleted");
 } catch (err) {
   next(err);
