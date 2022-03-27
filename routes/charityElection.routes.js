@@ -12,9 +12,6 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 router.get("/", async (req, res, next) => {
   try {
     const response = await CharityElectionModel.find().select("ownerID charityID date points").populate("ownerID charityID");
-    // console.log('====================================');
-    // console.log("ALL CHARITY ELECTIONS SECTION base response", response);
-    // console.log('====================================');
     res.json(response);
   } catch (err) {
     next(err);
