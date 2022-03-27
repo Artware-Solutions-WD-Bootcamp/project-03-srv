@@ -11,7 +11,7 @@ const charityElectionSchema = new Schema(
     },
     charityID: {
       type: Schema.Types.ObjectId,
-      ref: "CharityCause",
+      ref: "Charity",
       required: true,
     },
     date: {

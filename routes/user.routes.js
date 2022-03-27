@@ -3,7 +3,6 @@ const router = require("express").Router();
 const UserModel = require("../models/User.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //* ============================================================================
 //*   GET ALL USERS SECTION
@@ -109,7 +108,7 @@ router.post("/", async (req, res, next) => {
 //* ============================================================================
 //*   UPDATE USER SECTION
 //* ============================================================================
-router.patch("/:id", isAuthenticated, async (req, res, next) => {
+router.patch("/:id", async (req, res, next) => {
   const loggedUserLevel = req.payload.level;
   const { id } = req.params;
   const { username, email, password, level, avatar } = req.body;

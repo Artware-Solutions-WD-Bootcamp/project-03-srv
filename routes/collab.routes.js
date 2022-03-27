@@ -1,7 +1,7 @@
 //DO require needed modules
 const router = require("express").Router();
 const CollabModel = require("../models/Collab.model");
-
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //* ============================================================================
 //*   GET ALL COLLABORATORS SECTION
@@ -34,7 +34,7 @@ router.get("/:id", async (req, res, next) => {
 //* ============================================================================
 //*   ADD NEW COLLABORATOR SECTION
 //* ============================================================================
-router.post("/", async (req, res, next) => {
+router.post("/", isAuthenticated, async (req, res, next) => {
   const { name, description, registerUrl, logo } = req.body;
 
   //! ==========================================================================
@@ -61,7 +61,7 @@ router.post("/", async (req, res, next) => {
 //* ============================================================================
 //*   UPDATE COLLABORATOR SECTION
 //* ============================================================================
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id", isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
   const { name, description, registerUrl, logo, visibility } = req.body;
   try {
@@ -76,7 +76,7 @@ router.patch("/:id", async (req, res, next) => {
 //* ============================================================================
 //*   DELETE COLLABORATOR SECTION
 //* ============================================================================
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
 
   try {

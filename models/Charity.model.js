@@ -2,7 +2,7 @@
 const { Schema, model } = require("mongoose");
 
 //DO define Schema
-const charityCauseSchema = new Schema(
+const charitySchema = new Schema(
   {
     name: {
       type: String,
@@ -42,7 +42,7 @@ const charityCauseSchema = new Schema(
 );
 
 //DO define Model
-const CharityCauseModel = model("CharityCause", charityCauseSchema);
+const CharityModel = model("Charity", charitySchema);
 
 //DO export module
-module.exports = CharityCauseModel;
+module.exports = CharityModel;

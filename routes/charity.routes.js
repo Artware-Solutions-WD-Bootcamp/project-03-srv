@@ -1,14 +1,15 @@
 //DO require needed modules
 const router = require("express").Router();
-const CharityCauseModel = require("../models/CharityCause.model");
+const CharityModel = require("../models/Charity.model");
 const jwt = require("jsonwebtoken");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //* ============================================================================
 //*   GET ALL CHARITY CAUSES SECTION
 //* ============================================================================
 router.get("/", async (req, res, next) => {
   try {
-    const response = await CharityCauseModel.find().select("name description url logo active visible assignedAmount deliveryProof");
+    const response = await CharityModel.find().select("name description url logo active visible assignedAmount deliveryProof");
     res.json(response);
   } catch (err) {
     next(err);
@@ -21,7 +22,7 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const response = await CharityCauseModel.findById(id);
+    const response = await CharityModel.findById(id);
     res.json(response);
   } catch (err) {
     next(err);
@@ -31,7 +32,7 @@ router.get("/:id", async (req, res, next) => {
 //* ============================================================================
 //*   ADD NEW CHARITY CAUSE SECTION
 //* ============================================================================
-router.post("/", async (req, res, next) => {
+router.post("/", isAuthenticated, async (req, res, next) => {
   const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
 
   //! ==========================================================================
@@ -48,7 +49,7 @@ router.post("/", async (req, res, next) => {
   //DO if all validations were passed create the charity cause
   try {
 
-    await CharityCauseModel.create({
+    await CharityModel.create({
       name,
       description,
       url,
@@ -68,7 +69,7 @@ router.post("/", async (req, res, next) => {
 //* ============================================================================
 //*   UPDATE CHARITY CAUSE SECTION
 //* ============================================================================
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id", isAuthenticated, async (req, res, next) => {
   
     const { id } = req.params;
     const { name, description, url, logo, active, visible, assignedAmount, deliveryProof } = req.body;
@@ -86,7 +87,7 @@ router.patch("/:id", async (req, res, next) => {
   
   //DO if all validations were passed create the charity cause
   try {
-    await CharityCauseModel.findByIdAndUpdate(id, { name, description, url, logo, active, visible, assignedAmount, deliveryProof });
+    await CharityModel.findByIdAndUpdate(id, { name, description, url, logo, active, visible, assignedAmount, deliveryProof });
     res.json("Cause updated");
   } catch (err) {
     next(err);
@@ -96,11 +97,11 @@ router.patch("/:id", async (req, res, next) => {
 //* ============================================================================
 //*   DELETE CHARITY CAUSE SECTION
 //* ============================================================================
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isAuthenticated, async (req, res, next) => {
   const { id } = req.params;
 
   try {
-    await CharityCauseModel.findByIdAndDelete(id);
+    await CharityModel.findByIdAndDelete(id);
     res.json("Cause deleted");
   } catch (err) {
     next(err);

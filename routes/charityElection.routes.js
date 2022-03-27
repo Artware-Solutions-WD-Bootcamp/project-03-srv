@@ -1,8 +1,10 @@
 //DO require needed modules
 const router = require("express").Router();
+const CharityModel = require("../models/Charity.model");
 const CharityElectionModel = require("../models/CharityElection.model");
-const CharityCauseModel = require("../models/CharityCause.model");
+const UserModel = require("../models/User.model")
 const jwt = require("jsonwebtoken");
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 //* ============================================================================
 //*   GET ALL CHARITY ELECTIONS SECTION
@@ -10,12 +12,14 @@ const jwt = require("jsonwebtoken");
 router.get("/", async (req, res, next) => {
   try {
     const response = await CharityElectionModel.find().select("ownerID charityID date points").populate("ownerID charityID");
+    // console.log('====================================');
+    // console.log("ALL CHARITY ELECTIONS SECTION base response", response);
+    // console.log('====================================');
     res.json(response);
   } catch (err) {
     next(err);
   }
 });
-
 
 //* ============================================================================
 //*   GET CHARITY ELECTIONS DETAILS SECTION
@@ -23,20 +27,27 @@ router.get("/", async (req, res, next) => {
 router.get("/:id", async (req, res, next) => {
   try {
     const { id } = req.params;
-    const response = await CharityElectionModel.findById(id);
-    const { ownerID, charityID, date, points } = response;
-    const returnCharityElectionData = { ownerID, charityID, date, points };
+    const charityElectionsData = await CharityElectionModel.findById(id);
+    const { ownerID, charityID, date, points } = charityElectionsData;
+
+    const charityData = await CharityModel.findById(charityID);
+    const charityName = charityData.name
+    const charityLogo = charityData.logo
+    
+    const userData = await UserModel.findById(ownerID);
+    const userName = userData.username
+
+    const returnCharityElectionData = { ownerID, charityID, date, points, charityName, charityLogo, userName };
     res.json(returnCharityElectionData);
   } catch (err) {
     next(err);
   }
 });
 
-
 //* ============================================================================
 //*   ADD NEW CHARITY ELECTION SECTION
 //* ============================================================================
-router.post("/", async (req, res, next) => {
+router.post("/", isAuthenticated, async (req, res, next) => {
   const { ownerID, charityID, date, points } = req.body;
 
   //! ==========================================================================
@@ -68,7 +79,7 @@ router.post("/", async (req, res, next) => {
 //* ============================================================================
 //*   UPDATE CHARITY ELECTION SECTION
 //* ============================================================================
-router.patch("/:id", async (req, res, next) => {
+router.patch("/:id", isAuthenticated, async (req, res, next) => {
   
   const { id } = req.params;
   const { ownerID, charityID, date, points } = req.body;
@@ -97,7 +108,7 @@ try {
 //* ============================================================================
 //*   DELETE CHARITY ELECTION SECTION
 //* ============================================================================
-router.delete("/:id", async (req, res, next) => {
+router.delete("/:id", isAuthenticated, async (req, res, next) => {
 const { id } = req.params;
 
 try {

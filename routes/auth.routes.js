@@ -1,6 +1,5 @@
 //DO require needed modules
 const router = require("express").Router();
-//const { json } = require("express/lib/response");
 const UserModel = require("../models/User.model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
@@ -147,6 +146,7 @@ router.get("/verify", isAuthenticated, (req, res, next) => {
   // this route will verify if tue user has a valid token when returns to page
   res.status(200).json()
 })
+
 
 //DO export module
 module.exports = router;

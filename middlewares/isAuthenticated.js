@@ -9,7 +9,7 @@ const isAuthenticated = jwt({
   getToken: (req) => {
     if (req?.headers?.authorization?.split(" ")[0] === "Bearer") {
       const authToken = req.headers.authorization.split(" ")[1]
-      console.log("Token sent")
+      console.log("Auth token sent")
       return authToken
     } else {
       console.log("No Token")
